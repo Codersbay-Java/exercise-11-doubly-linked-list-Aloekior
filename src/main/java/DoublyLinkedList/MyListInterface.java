@@ -24,7 +24,7 @@ public interface MyListInterface {
 
     void printListBackwards();
 
-    Integer get(int index) throws IllegalArgumentException;
+    int get(int index) throws IllegalArgumentException;
 
     void removeDuplicates();
 
@@ -34,10 +34,10 @@ public interface MyListInterface {
 
     void clear();
 
-    boolean insertAfter(int key, int data);
+    boolean insertAfter(int index, int data);
 
 
     // Removes first occurrence of element val and returns true if this was successful.
     // In error case (e.g. if the given element is not found) return false.
-    Node deleteKey(int key);
+    Node deleteKey(int index);
 }
