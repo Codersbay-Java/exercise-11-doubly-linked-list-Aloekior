@@ -46,14 +46,15 @@ public class DoublyLinkedListCustom implements MyListInterface {
         } else if (index == size) {
             addLast(item);
         } else {
+
+            Node indexNode = getNodeAtIndex(index);
+
             Node newNode = new Node(item);
-            Node current = head;
-            for (int i = 0; i < index - 1; i++) {
-                current = current.getNext();
-            }
-            newNode.setPrevious(current.getPrevious());
-            current.setPrevious(newNode);
-            newNode.setNext(current);
+
+            indexNode.getPrevious().setNext(newNode);
+            newNode.setNext(indexNode);
+            newNode.setPrevious(indexNode.getPrevious());
+            indexNode.setPrevious(newNode);
             size++;
         }
     }
@@ -62,22 +63,9 @@ public class DoublyLinkedListCustom implements MyListInterface {
     public void addElementAtRandomIndex(int item) {
         // addElementAtRandomIndex
         Random rand = new Random();
-        int index = rand.nextInt(0, size + 1);
-        if (index == 0) {
-            addFirst(item);
-        } else if (index == size) {
-            addLast(item);
-        } else {
-            Node newNode = new Node(item);
-            Node current = head;
-            for (int i = 0; i < index - 1; i++) {
-                current = current.getNext();
-            }
-            newNode.setPrevious(current.getPrevious());
-            current.setPrevious(newNode);
-            newNode.setNext(current);
-            size++;
-        }
+        int index = rand.nextInt(0, size);
+
+        addAtIndex(index, item);
     }
 
     @Override
@@ -132,15 +120,13 @@ public class DoublyLinkedListCustom implements MyListInterface {
             return removeLast();
         }
 
-        Node current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.getNext();
-        }
-        current.getPrevious().setNext(current.getNext());
-        current.getNext().setPrevious(current.getPrevious());
+        Node indexNode = getNodeAtIndex(index);
+
+        indexNode.getPrevious().setNext(indexNode.getNext());
+        indexNode.getNext().setPrevious(indexNode.getPrevious());
 
         size--;
-        return current;
+        return indexNode;
     }
 
     @Override
@@ -209,22 +195,28 @@ public class DoublyLinkedListCustom implements MyListInterface {
             //do nothing
         } else {
             Node current = head;
-            while (current.getNext() != null) {
-                int index = 0;
-                int currentValue = current.getValue();
+            int index;
+            int value;
+            int value2;
 
-                Node current2 = current;
-                while (current2.getNext() != null) {
-                    if (currentValue == current2.getNext().getValue()) {
-                        removeAtIndex(index + 1);
-                    }
+            while (current.getNext() != null) {
+                index = 1;
+                value = current.getValue();
+
+                Node current2 = current.getNext();
+
+                while (current2 != null) {
+                    value2 = current2.getValue();
                     index++;
+                    if (value == value2) {
+                        index--;
+                        removeAtIndex(index);
+                    }
                     current2 = current2.getNext();
                 }
                 current = current.getNext();
             }
         }
-
     }
 
     @Override
@@ -234,16 +226,17 @@ public class DoublyLinkedListCustom implements MyListInterface {
             throwIllegal();
         }
 
-        Node oldHead = head;
-        Node current = tail;
+        Node current = head;
+        Node temp = head;
         head = tail;
+        tail = temp;
+
         while (current != null) {
-            Node temp = current.getPrevious();
-            current.setPrevious(current.getNext());
-            current.setNext(temp);
-            current = temp;
+            temp = current.getNext();
+            current.setNext(current.getPrevious());
+            current.setPrevious(temp);
+            current = current.getPrevious();
         }
-        tail = oldHead;
     }
 
     @Override
@@ -252,7 +245,7 @@ public class DoublyLinkedListCustom implements MyListInterface {
         DoublyLinkedListCustom returnList = new DoublyLinkedListCustom();
 
         Node current = head;
-        while (current.getNext() != null) {
+        while (current != null) {
             returnList.addLast(current.getValue());
             current = current.getNext();
         }
@@ -263,6 +256,7 @@ public class DoublyLinkedListCustom implements MyListInterface {
     public void clear() {
         // clear
         head = tail = null;
+        size = 0;
     }
 
     @Override
@@ -277,45 +271,47 @@ public class DoublyLinkedListCustom implements MyListInterface {
         } else {
             Node newNode = new Node(data);
 
-            Node current = head;
-            for (int i = 0; i <= index; i++) {
-                current = current.getNext();
-            }
+            Node indexNode = getNodeAtIndex(index);
 
-            current.getPrevious().setNext(newNode);
-            newNode.setPrevious(current.getPrevious());
-            current.setPrevious(newNode);
-            newNode.setNext(current);
+            indexNode.getPrevious().setNext(newNode);
+            newNode.setPrevious(indexNode.getPrevious());
+            indexNode.setPrevious(newNode);
+            newNode.setNext(indexNode);
+
             size++;
         }
         return true;
     }
 
     @Override
-    public Node deleteKey(int index) {
-        // deleteKey
+    public Node deleteKey(int value) {
+        // delete first instance of given value
         if (isEmpty()) {
             throwIllegal();
-        } else if (index < 0 || index >= size) {
-            throwIllegal();
-        } else if (index == 0) {
-            return removeFirst();
-        } else if (index == size - 1) {
-            return removeLast();
         }
 
         Node current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.getNext();
-        }
-        current.getPrevious().setNext(current.getNext());
-        current.getNext().setPrevious(current.getPrevious());
+        int counter = 0;
 
-        size--;
-        return current;
+        while (current != null) {
+            if (current.getValue() == value) {
+                return removeAtIndex(counter);
+            }
+            current = current.getNext();
+            counter++;
+        }
+        return null;
     }
 
     private void throwIllegal() {
         throw new IllegalArgumentException("Input out of bounds");
+    }
+
+    private Node getNodeAtIndex(int index) {
+        Node current = head;
+        for (int i = 0; i < index; i++) {
+            current = current.getNext();
+        }
+        return current;
     }
 }
