@@ -185,8 +185,21 @@ public class DoublyLinkedListCustom implements MyListInterface {
 
     @Override
     public int get(int index) throws IllegalArgumentException {
-        //TODO ???
-        return 0;
+        //Done ???
+        if (isEmpty() || index < 0 || index >= size) {
+            throwIllegal();
+        }
+
+        Node current = head;
+
+        for (int i = 0; i < size; i++) {
+            if (i == index) {
+                break;
+            }
+            current = current.getNext();
+        }
+
+        return current.getValue();
     }
 
     @Override
@@ -259,10 +272,8 @@ public class DoublyLinkedListCustom implements MyListInterface {
             return false;
         } else if (isEmpty()) {
             addFirst(data);
-            return true;
         } else if (index == size - 1) {
             addLast(data);
-            return true;
         } else {
             Node newNode = new Node(data);
 
@@ -276,8 +287,8 @@ public class DoublyLinkedListCustom implements MyListInterface {
             current.setPrevious(newNode);
             newNode.setNext(current);
             size++;
-            return true;
         }
+        return true;
     }
 
     @Override
