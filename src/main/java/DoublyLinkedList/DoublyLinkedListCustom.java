@@ -55,6 +55,7 @@ public class DoublyLinkedListCustom implements MyListInterface {
             newNode.setNext(indexNode);
             newNode.setPrevious(indexNode.getPrevious());
             indexNode.setPrevious(newNode);
+
             size++;
         }
     }
@@ -96,11 +97,7 @@ public class DoublyLinkedListCustom implements MyListInterface {
         if (head.getNext() == null) {
             head = tail = null;
         } else {
-            Node current = head;
-            while (current.getNext() != null) {
-                current = current.getNext();
-            }
-            tail = current.getPrevious();
+            tail = temp.getPrevious();
             tail.setNext(null);
         }
         size--;
@@ -176,14 +173,15 @@ public class DoublyLinkedListCustom implements MyListInterface {
             throwIllegal();
         }
 
-        Node current = head;
-
-        for (int i = 0; i < size; i++) {
-            if (i == index) {
-                break;
-            }
-            current = current.getNext();
-        }
+//        Node current = head;
+//
+//        for (int i = 0; i < size; i++) {
+//            if (i == index) {
+//                break;
+//            }
+//            current = current.getNext();
+//        }
+        Node current = getNodeAtIndex(index);
 
         return current.getValue();
     }
@@ -196,11 +194,12 @@ public class DoublyLinkedListCustom implements MyListInterface {
         } else {
             Node current = head;
             int index;
+            int index2 = 1;
             int value;
             int value2;
 
             while (current.getNext() != null) {
-                index = 1;
+                index = index2;
                 value = current.getValue();
 
                 Node current2 = current.getNext();
@@ -215,6 +214,7 @@ public class DoublyLinkedListCustom implements MyListInterface {
                     current2 = current2.getNext();
                 }
                 current = current.getNext();
+                index2++;
             }
         }
     }
@@ -269,16 +269,7 @@ public class DoublyLinkedListCustom implements MyListInterface {
         } else if (index == size - 1) {
             addLast(data);
         } else {
-            Node newNode = new Node(data);
-
-            Node indexNode = getNodeAtIndex(index);
-
-            indexNode.getPrevious().setNext(newNode);
-            newNode.setPrevious(indexNode.getPrevious());
-            indexNode.setPrevious(newNode);
-            newNode.setNext(indexNode);
-
-            size++;
+            addAtIndex(index + 1,data);
         }
         return true;
     }

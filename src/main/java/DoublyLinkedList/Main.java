@@ -1,16 +1,15 @@
 package DoublyLinkedList;
 
-import java.util.Random;
 
 public class Main {
     public static void main(String[] args) throws InterruptedException {
         DoublyLinkedListCustom list = new DoublyLinkedListCustom();
-        //TODO test all methods
+        // DONE test all methods
         // don't forget to also check the head and tail references
 
         int item = 15;
         int myIndex = 5;
-        int myElement = 25;
+        int myElement = 100;
         int duplicate = 5;
 
         // isEmpty ==> true
@@ -56,15 +55,15 @@ public class Main {
         System.out.println("add and then removeDuplicates");
         list.addFirst(duplicate);
         list.addLast(duplicate);
-        list.addAtIndex(5, duplicate);
+        list.addAtIndex(myIndex, duplicate);
         list.printList();
         list.removeDuplicates();
         list.printList();
 
         // reverseList & insertAfter
-        System.out.println("reverseList & insert 100 after 4");
+        System.out.println("reverseList & insert 100 after " + myIndex);
         list.reverseList();
-        System.out.println(list.insertAfter(4,100));
+        System.out.println(list.insertAfter(myIndex,myElement));
         list.printList();
 
         // copyList & clear
